@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/home"
+            android:title="Anasayfa" />
+        <item
+            android:id="@+id/nav_create"
+            android:icon="@drawable/plus"
+            android:title="Anket Oluştur" />
+        <item
+            android:id="@+id/nav_search"
+            android:icon="@android:drawable/ic_search_category_default"
+            android:title="Anket Ara" />
+        <item
+            android:id="@+id/nav_searchUser"
+            android:icon="@drawable/user_search"
+            android:title="Kullanıcı Ara" />
+        <item
+            android:id="@+id/nav_anketler"
+            android:icon="@drawable/document"
+            android:title="Anketlerim" />
+        <item
+            android:id="@+id/nav_signOut"
+            android:icon="@android:drawable/ic_menu_close_clear_cancel"
+            android:title="Çıkış" />
+    </group>
+
+</menu>
