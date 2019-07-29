@@ -13,7 +13,6 @@ import com.example.election.adapters.ResultAdapter;
 import com.example.election.objects.Anket;
 
 public class ResultActivity extends AppCompatActivity {
-    TextView txtQuestion;
     RecyclerView lstResults;
     Anket anket;
     ResultAdapter adapter;
@@ -26,10 +25,8 @@ public class ResultActivity extends AppCompatActivity {
     }
 
     private void init() {
-        txtQuestion=findViewById(R.id.txtRQuestion);
         lstResults=findViewById(R.id.lstResults);
         anket= (Anket) getIntent().getSerializableExtra("Anket");
-        txtQuestion.setText(anket.getQuestion());
         adapter=new ResultAdapter(this,anket);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL, false);
         lstResults.setLayoutManager(layoutManager);

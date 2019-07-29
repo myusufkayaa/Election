@@ -1,12 +1,12 @@
 package com.example.election.activities;
 
 import android.content.Intent;
-import android.net.wifi.hotspot2.pps.HomeSp;
 import android.os.Bundle;
 
 import com.example.election.fragments.CreateFragment;
 import com.example.election.R;
 import com.example.election.fragments.HomeFragment;
+import com.example.election.fragments.MyPollFragment;
 import com.example.election.fragments.SearchFragment;
 
 import androidx.core.view.GravityCompat;
@@ -16,17 +16,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.election.fragments.SearchUserFragment;
 import com.example.election.objects.User;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -41,12 +37,12 @@ public class HomeActivity extends AppCompatActivity
     FirebaseFirestore db;
     CreateFragment createFragment;
     SearchFragment searchFragment;
-    SearchUserFragment searchUserFragment;
     TextView txtUser;
     TextView txtFollowers;
     TextView txtFollowing;
     HomeFragment homeFragment;
     User currentUser;
+    MyPollFragment myPollFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +51,8 @@ public class HomeActivity extends AppCompatActivity
         auth = FirebaseAuth.getInstance();
         createFragment = new CreateFragment();
         searchFragment = new SearchFragment();
-        searchUserFragment=new SearchUserFragment();
         homeFragment=new HomeFragment();
+        myPollFragment=new MyPollFragment();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -68,6 +64,8 @@ public class HomeActivity extends AppCompatActivity
         db=FirebaseFirestore.getInstance();
         setUserTexts();
         txtUser.setText(auth.getCurrentUser().getEmail());
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,homeFragment).commit();
+        getSupportActionBar().setTitle("Anasayfa");
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -110,8 +108,8 @@ public class HomeActivity extends AppCompatActivity
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                     currentUser=new User(documentSnapshot);
-                    txtFollowers.setText("Takipçiler: "+currentUser.getFollowers().size());
-                    txtFollowing.setText("Takip Edilenler: "+currentUser.getFollowing().size());
+                    txtFollowers.setText(String.valueOf(currentUser.getFollowers().size()));
+                    txtFollowing.setText(String.valueOf(currentUser.getFollowing().size()));
                     openUsers();
 
             }
@@ -127,18 +125,19 @@ public class HomeActivity extends AppCompatActivity
         switch (id) {
             case R.id.nav_home:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,homeFragment).commit();
+                getSupportActionBar().setTitle("Anasayfa");
                 break;
             case R.id.nav_create:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, createFragment).commit();
+                getSupportActionBar().setTitle("Anket Oluştur");
                 break;
             case R.id.nav_search:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, searchFragment).commit();
+                getSupportActionBar().setTitle("Ara");
                 break;
             case R.id.nav_anketler:
-
-                break;
-            case R.id.nav_searchUser:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,searchUserFragment).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,myPollFragment).commit();
+                getSupportActionBar().setTitle("Anketlerim");
                 break;
             case R.id.nav_signOut:
                 auth.signOut();
@@ -146,6 +145,7 @@ public class HomeActivity extends AppCompatActivity
                 startActivity(intent);
                 finish();
                 break;
+
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

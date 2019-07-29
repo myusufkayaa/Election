@@ -46,17 +46,17 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void init() {
-        txtMail=findViewById(R.id.txtPMail);
-        btnFollow=findViewById(R.id.btnPFollow);
-        recyclerView=findViewById(R.id.lstPAnketler);
-        user= (User) getIntent().getSerializableExtra("user");
+        txtMail = findViewById(R.id.txtPMail);
+        btnFollow = findViewById(R.id.btnPFollow);
+        recyclerView = findViewById(R.id.lstPAnketler);
+        user = (User) getIntent().getSerializableExtra("user");
         txtMail.setText(user.getEmail());
-        adapter=new SearchAdapter(this);
-        anketler=new ArrayList<>();
-        db=FirebaseFirestore.getInstance();
-        auth=FirebaseAuth.getInstance();
+        adapter = new SearchAdapter(this);
+        anketler = new ArrayList<>();
+        db = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
         getCurrentUser();
-        LinearLayoutManager layoutManager=new LinearLayoutManager(getApplicationContext(),RecyclerView.VERTICAL,false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
         getAnketler();
@@ -65,30 +65,28 @@ public class ProfileActivity extends AppCompatActivity {
 
     public void getAnketler() {
         anketler.clear();
-        for (final String id : user.getAnketler()) {
-            db.collection("Anketler")
-                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                        @Override
-                        public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
-                            anketler.clear();
-                            for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                                Anket anket = new Anket(document);
+
+        db.collection("Anketler")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                        anketler.clear();
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            Anket anket = new Anket(document);
+                            anket.setAnketId(document.getId());
+                            for (final String id : user.getAnketler()) {
                                 if (anket.getAnketId().equals(id)) {
                                     anketler.add(anket);
                                 }
                             }
-                            adapter.setAnketler(anketler);
                         }
-                    });
-
-
-        }
-
-
+                        adapter.setAnketler(anketler);
+                    }
+                });
     }
 
     public void setButton() {
-        if (auth.getUid().equals(user.getuId())){
+        if (auth.getUid().equals(user.getuId())) {
             btnFollow.setVisibility(View.GONE);
             return;
         }
@@ -100,8 +98,8 @@ public class ProfileActivity extends AppCompatActivity {
                 return;
             }
         }
-
     }
+
     public void getCurrentUser() {
         db.collection("Users").document(auth.getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
@@ -113,6 +111,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 
     }
+
     public void clickFollow(View view) {
         if (isFollowing()) {
             currentUser.getFollowing().remove(user.getuId());
@@ -126,6 +125,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 
     }
+
     public boolean isFollowing() {
         for (String id : currentUser.getFollowing()) {
             if (user.getuId().equals(id)) {
@@ -134,6 +134,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
         return false;
     }
+
     public void updateUser(User user) {
         Map<String, Object> us = new HashMap<>();
         us.put("user", user);

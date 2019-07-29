@@ -50,7 +50,7 @@ public class HomeFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
         adapter = new SearchAdapter(getActivity());
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext(), RecyclerView.VERTICAL, false);
         lstHome.setLayoutManager(layoutManager);
         lstHome.setAdapter(adapter);
         getCurrentUser();
@@ -58,24 +58,25 @@ public class HomeFragment extends Fragment {
 
     public void getAnketler() {
         anketler.clear();
-        for (final String id : anketId) {
-            db.collection("Anketler")
-                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                        @Override
-                        public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
-                            anketler.clear();
-                            for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+
+        db.collection("Anketler")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                        anketler.clear();
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            for (final String id : anketId) {
                                 Anket anket = new Anket(document);
+                                anket.setAnketId(document.getId());
                                 if (anket.getAnketId().equals(id)) {
                                     anketler.add(anket);
+                                    adapter.setAnketler(anketler);
                                 }
                             }
-                            adapter.setAnketler(anketler);
                         }
-                    });
 
-
-        }
+                    }
+                });
 
 
     }

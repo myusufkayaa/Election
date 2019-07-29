@@ -41,8 +41,8 @@ public class Anket implements Serializable {
         this.userId = userId;
     }
 
-    public Anket(String question, String userId, ArrayList<String> optionList, String anketId) {
-        this.anketId=anketId;
+    public Anket(String question, String userId, ArrayList<String> optionList) {
+
         this.question = question;
         this.userId = userId;
         options = new ArrayList<>();
@@ -50,7 +50,6 @@ public class Anket implements Serializable {
             options.add(new Option(op));
     }
     public Anket(DocumentSnapshot document){
-        anketId=(String) ((HashMap)document.getData().get("anket")).get("anketId");
         question=(String) ((HashMap)document.getData().get("anket")).get("question");
         userId=(String) ((HashMap)document.getData().get("anket")).get("userId");
         options=new ArrayList<>();

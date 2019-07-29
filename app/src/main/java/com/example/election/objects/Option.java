@@ -7,6 +7,7 @@ import java.util.HashMap;
 public class Option implements Serializable {
     private String opName;
 
+
     private ArrayList<String> users;
 
     public ArrayList<String> getUsers() {

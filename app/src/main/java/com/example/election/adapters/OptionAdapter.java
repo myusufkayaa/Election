@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +34,8 @@ public class OptionAdapter extends RecyclerView.Adapter<OptionAdapter.ViewHolder
     Context context;
     Anket anket;
     LayoutInflater inflater;
+    FirebaseAuth auth;
+    FirebaseFirestore db;
 
 
     public OptionAdapter(Activity activity,Context context, Anket anket) {
@@ -44,6 +47,8 @@ public class OptionAdapter extends RecyclerView.Adapter<OptionAdapter.ViewHolder
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        auth=FirebaseAuth.getInstance();
+        db=FirebaseFirestore.getInstance();
         inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.option_list, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
@@ -52,11 +57,18 @@ public class OptionAdapter extends RecyclerView.Adapter<OptionAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+        setButtonDelete(holder);
         holder.txtOption.setText(anket.getOptions().get(position).getOpName());
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 clickOption(position);
+            }
+        });
+        holder.btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteOption(position);
             }
         });
 
@@ -88,6 +100,25 @@ public class OptionAdapter extends RecyclerView.Adapter<OptionAdapter.ViewHolder
             }
         });
     }
+    public void setButtonDelete(ViewHolder holder){
+        if (anket.getUserId().equals(auth.getUid())){
+            holder.btnDelete.setVisibility(View.VISIBLE);
+            return;
+        }
+        holder.btnDelete.setVisibility(View.GONE);
+    }
+    public void deleteOption(int position){
+        anket.getOptions().remove(position);
+        Map<String, Object> poll = new HashMap<>();
+        poll.put("anket", anket);
+        db.collection("Anketler").document(anket.getAnketId()).set(poll).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                notifyDataSetChanged();
+            }
+        });
+
+    }
 
     private void clickOption(final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -106,6 +137,7 @@ public class OptionAdapter extends RecyclerView.Adapter<OptionAdapter.ViewHolder
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
+        ImageButton btnDelete;
         TextView txtOption;
         ConstraintLayout layout;
 
@@ -113,6 +145,7 @@ public class OptionAdapter extends RecyclerView.Adapter<OptionAdapter.ViewHolder
             super(itemView);
             txtOption = itemView.findViewById(R.id.txtListOption);
             layout = itemView.findViewById(R.id.cLayout);
+            btnDelete=itemView.findViewById(R.id.btnDeleteOption);
         }
     }
 }

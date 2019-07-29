@@ -9,11 +9,15 @@
 
     <EditText
         android:id="@+id/txtKmail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="260dp"
+        android:layout_height="40dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="24dp"
+        android:background="@drawable/mailedittext"
+        android:paddingLeft="50dp"
+        android:textColorHint="#6873A5"
+        android:textColor="#6873A5"
         android:ems="10"
         android:hint="e-mail"
         android:inputType="textEmailAddress"
@@ -23,11 +27,15 @@
 
     <EditText
         android:id="@+id/txtKpass"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="260dp"
+        android:layout_height="40dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="24dp"
+        android:paddingLeft="50dp"
+        android:textColorHint="#6873A5"
+        android:textColor="#6873A5"
+        android:background="@drawable/passedittext"
         android:ems="10"
         android:hint="şifre"
         android:inputType="textPassword"
@@ -37,12 +45,16 @@
 
     <EditText
         android:id="@+id/txtKpass2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="260dp"
+        android:layout_height="40dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:paddingLeft="50dp"
+        android:textColorHint="#6873A5"
+        android:textColor="#6873A5"
+        android:background="@drawable/passedittext"
         android:ems="10"
         android:hint="tekrar şifre"
         android:inputType="textPassword"
@@ -51,17 +63,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <ImageButton
         android:id="@+id/btnKayit"
-        android:layout_width="200dp"
-        android:layout_height="35dp"
+        android:layout_width="195dp"
+        android:layout_height="45dp"
         android:layout_marginTop="32dp"
-        android:background="@drawable/custom_button"
+        android:background="@drawable/btnregister"
         android:onClick="clickKayit"
-        android:text="KAYIT"
-        android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="@+id/txtKpass2"
         app:layout_constraintStart_toStartOf="@+id/txtKpass2"
-        app:layout_constraintTop_toBottomOf="@+id/txtKpass2"
-        tools:ignore="OnClick" />
+        app:layout_constraintTop_toBottomOf="@+id/txtKpass2" />
 </androidx.constraintlayout.widget.ConstraintLayout>

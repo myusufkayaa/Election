@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.election.R;
@@ -25,7 +26,7 @@ public class KayitActivity extends AppCompatActivity {
     private EditText txtMail;
     private EditText txtPass;
     private EditText txtPass2;
-    private Button btnKayit;
+    private ImageButton btnKayit;
     FirebaseAuth auth;
     FirebaseFirestore db;
 

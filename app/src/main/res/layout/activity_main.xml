@@ -9,71 +9,85 @@
 
     <EditText
         android:id="@+id/txtMail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="260dp"
+        android:layout_height="40dp"
         android:layout_marginBottom="24dp"
+        android:background="@drawable/mailedittext"
         android:ems="10"
         android:hint="e-mail"
+        android:textColor="#6873A5"
+        android:textColorHint="#6873A5"
         android:inputType="textEmailAddress"
+        android:paddingLeft="50dp"
         app:layout_constraintBottom_toTopOf="@+id/txtPass"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/txtPass"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="260dp"
+        android:layout_height="40dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
+        android:background="@drawable/passedittext"
         android:ems="10"
         android:hint="password"
         android:inputType="textPassword"
+        android:textColor="#6873A5"
+        android:textColorHint="#6873A5"
+        android:paddingLeft="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <ImageButton
         android:id="@+id/btnGiris"
-        android:layout_width="200dp"
-        android:layout_height="35dp"
+        android:layout_width="195dp"
+        android:layout_height="45dp"
         android:layout_marginTop="32dp"
-        android:background="@drawable/custom_button"
+        android:background="@drawable/btnlogin"
         android:onClick="giris"
-        android:text="Giriş"
-        android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="@+id/txtPass"
         app:layout_constraintStart_toStartOf="@+id/txtPass"
-        app:layout_constraintTop_toBottomOf="@+id/txtPass"
-        tools:ignore="OnClick" />
+        app:layout_constraintTop_toBottomOf="@+id/txtPass" />
 
-    <Button
+    <ImageButton
         android:id="@+id/btnKayit"
-        android:layout_width="200dp"
-        android:layout_height="35dp"
+        android:layout_width="195dp"
+        android:layout_height="45dp"
         android:layout_marginTop="24dp"
-        android:background="@drawable/custom_button"
+        android:background="@drawable/btnregister"
         android:onClick="kayit"
-        android:text="Kayıt Ol"
-        android:textColor="#FFFFFF"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="@+id/btnGiris"
         app:layout_constraintStart_toStartOf="@+id/btnGiris"
-        app:layout_constraintTop_toBottomOf="@+id/btnGiris"
-        tools:ignore="OnClick" />
+        app:layout_constraintTop_toBottomOf="@+id/btnGiris" />
 
     <Button
         android:id="@+id/btncikis"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
+        android:layout_width="195dp"
+        android:layout_height="45dp"
         android:layout_marginTop="24dp"
-        android:background="@drawable/custom_button"
         android:onClick="cikis"
-        android:textColor="#FFFFFF"
+        android:background="@drawable/btnsignout"
+        android:textAllCaps="false"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@+id/btnGiris"
         app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="@+id/btnGiris"
-        app:layout_constraintTop_toBottomOf="@+id/btnGiris"
-        tools:ignore="OnClick" />
+        app:layout_constraintTop_toBottomOf="@+id/btnGiris" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/txtMail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

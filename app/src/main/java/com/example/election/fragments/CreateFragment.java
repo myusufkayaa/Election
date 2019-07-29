@@ -20,9 +20,12 @@ import androidx.fragment.app.Fragment;
 import com.example.election.R;
 import com.example.election.objects.Anket;
 import com.example.election.objects.User;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -36,7 +39,6 @@ import java.util.Map;
 
 public class CreateFragment extends Fragment {
     private View view;
-    EditText txtAnketId;
     EditText txtQuestion;
     EditText txtAddOption;
     Button btnAddOption;
@@ -52,7 +54,7 @@ public class CreateFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (view==null){
+        if (view == null) {
             view = inflater.inflate(R.layout.fragment_create, container, false);
             init();
         }
@@ -60,11 +62,10 @@ public class CreateFragment extends Fragment {
     }
 
     private void init() {
-        auth=FirebaseAuth.getInstance();
-        db=FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
         getCurrentUser();
         options = new ArrayList<>();
-        txtAnketId = view.findViewById(R.id.txtAnketId);
         txtQuestion = view.findViewById(R.id.txtQuestion);
         txtAddOption = view.findViewById(R.id.txtAddOption);
         btnAddOption = view.findViewById(R.id.btnAddOption);
@@ -95,7 +96,7 @@ public class CreateFragment extends Fragment {
 
 
     private void addOption() {
-        if (txtAddOption.getText().toString().equals("")){
+        if (txtAddOption.getText().toString().equals("")) {
             txtAddOption.setError("Boş Bırakmayın");
             return;
         }
@@ -107,11 +108,11 @@ public class CreateFragment extends Fragment {
     }
 
 
-    private void deleteOption(final int position){
-        AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
+    private void deleteOption(final int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(options.get(position));
         builder.setMessage("Bu Seçeneği Silmek İstediğinize Emin Misiniz?");
-        builder.setNegativeButton("Hayır",null);
+        builder.setNegativeButton("Hayır", null);
         builder.setPositiveButton("Evet", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -121,39 +122,37 @@ public class CreateFragment extends Fragment {
         });
         builder.show();
     }
-    private void createPoll(){
-        if (txtAnketId.getText().toString().equals("")||txtQuestion.getText().toString().equals("")){
-            if (txtAnketId.getText().toString().equals(""))
-                txtAnketId.setError("Boş Bırakmayın");
-            if (txtQuestion.getText().toString().equals(""))
-                txtQuestion.setError("Boş Bırakmayın");
+
+    private void createPoll() {
+        if (txtQuestion.getText().toString().equals("")) {
+            txtQuestion.setError("Boş Bırakmayın");
             return;
         }
-        final Anket anket=new Anket(txtQuestion.getText().toString(),auth.getUid(),options,txtAnketId.getText().toString());
+        final Anket anket = new Anket(txtQuestion.getText().toString(), auth.getUid(), options);
         Map<String, Object> poll = new HashMap<>();
         poll.put("anket", anket);
-        db.collection("Anketler").document(anket.getAnketId()).set(poll).addOnSuccessListener(new OnSuccessListener<Void>() {
+        db.collection("Anketler").add(poll).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
             @Override
-            public void onSuccess(Void aVoid) {
+            public void onComplete(@NonNull Task<DocumentReference> task) {
                 txtAddOption.setText("");
-                txtAnketId.setText("");
                 txtQuestion.setText("");
                 options.clear();
-                currentUser.getAnketler().add(anket.getAnketId());
+                currentUser.getAnketler().add(task.getResult().getId());
                 updateUser();
                 adapter.notifyDataSetChanged();
-                Toast.makeText(getContext(),"Başarılı",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Başarılı", Toast.LENGTH_SHORT).show();
+
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getContext(),e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
             }
         });
 
     }
 
-    public void getCurrentUser(){
+    public void getCurrentUser() {
         db.collection("Users").document(auth.getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
@@ -162,7 +161,8 @@ public class CreateFragment extends Fragment {
         });
 
     }
-    public void updateUser(){
+
+    public void updateUser() {
         Map<String, Object> us = new HashMap<>();
         us.put("user", currentUser);
         db.collection("Users").document(currentUser.getuId()).set(us);
